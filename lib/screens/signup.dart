@@ -1,53 +1,57 @@
-// ignore: unused_import
-import 'package:chat_app/screens/signup.dart';
-import 'package:chat_app/utils/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:chat_app/utils/routes.dart';
 
-class Login_Page extends StatefulWidget {
-  const Login_Page({super.key});
+class Signup_page extends StatefulWidget {
+  const Signup_page({super.key});
+
   @override
-  State<Login_Page> createState() => _Login_PageState();
+  State<Signup_page> createState() => _Signup_pageState();
 }
 
-class _Login_PageState extends State<Login_Page> {
+class _Signup_pageState extends State<Signup_page> {
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController cpasswordController = TextEditingController();
-  @override
 
   void checkValues(){
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
+    String cpassword = cpasswordController.text.trim();
 
-    if(email == "" || password == ""){
+    if(email == "" || password == "" || cpassword == ""){
       print("Enter your details");
     }
+    else if(password != cpassword){
+      print("Password don't match");
+    }
     else {
-      login(email, password);
+      signup(email, password);
     }
   }
 
-  Future<void> login(String email, String password) async {
+  void signup(String email, String password) async{
     try {
-  final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-    email: email,
-    password: password
-  );
-  Navigator.pushNamed(context, MyRoutes.homeRoute);
-} on FirebaseAuthException catch (e) {
-  if (e.code == 'user-not-found') {
-    print('No user found for that email.');
-  } else if (e.code == 'wrong-password') {
-    print('Wrong password provided for that user.');
-  }
+    final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    Navigator.pushNamed(context, MyRoutes.homeRoute);
+    } on FirebaseAuthException catch (e) {
+    if (e.code == 'weak-password') {
+      print('The password provided is too weak.');
+    } else if (e.code == 'email-already-in-use') {
+      print('The account already exists for that email.');
+    }
+    } catch (e) {
+    print(e);
 }
   }
 
-
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
@@ -64,7 +68,7 @@ class _Login_PageState extends State<Login_Page> {
               TextFormField(
                 controller: emailController,
                 decoration: const InputDecoration(
-                  hintText: "Enter Email",
+                  hintText: "Enter Email"
                 ),
               ),
               15.heightBox,
@@ -72,6 +76,13 @@ class _Login_PageState extends State<Login_Page> {
                 controller: passwordController,
                 decoration: const InputDecoration(
                   hintText: "Enter Password"
+                ),
+              ),
+              15.heightBox,
+              TextFormField(
+                controller: cpasswordController,
+                decoration: const InputDecoration(
+                  hintText: "Confirm Password"
                 ),
               ),
 
@@ -82,12 +93,6 @@ class _Login_PageState extends State<Login_Page> {
                   checkValues();
                 },
                 child: "Register".text.xl.make(),
-              ),
-              "Don't have an account?".text.make(),
-              TextButton(onPressed: () {
-                Navigator.pushNamed(context, MyRoutes.signupRoute);
-              },
-              child: "Sign up".text.underline.make(),
               )
             ],
           ),
