@@ -1,8 +1,11 @@
+import 'package:chat_app/screens/completeProfile.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:chat_app/utils/routes.dart';
+import 'package:chat_app/models/UserModel.dart';
 
 class Signup_page extends StatefulWidget {
   const Signup_page({super.key});
@@ -34,12 +37,12 @@ class _Signup_pageState extends State<Signup_page> {
   }
 
   void signup(String email, String password) async{
+    UserCredential? credential;
     try {
-    final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
+        credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
     );
-    Navigator.pushNamed(context, MyRoutes.homeRoute);
     } on FirebaseAuthException catch (e) {
     if (e.code == 'weak-password') {
       print('The password provided is too weak.');
@@ -49,6 +52,26 @@ class _Signup_pageState extends State<Signup_page> {
     } catch (e) {
     print(e);
 }
+    if(credential != null){
+      String uid = credential.user!.uid;
+      UserModel newUser = UserModel(
+        uid: uid,
+        email: email,
+        name: "",
+        profilePic: "",
+      );
+      await FirebaseFirestore.instance.collection("users").doc(uid).set(newUser.toMap()).then((value) {
+        print("New User");
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context){
+              return CompleteProfile(userModel: newUser, firebaseUser: credential!.user!);
+            }
+            )
+          );
+      } );
+    }
   }
 
   @override

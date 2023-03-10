@@ -58,7 +58,7 @@ class _Login_PageState extends State<Login_Page> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset('assets/loginImg.png', width: 270, height: 200,),
-              "Register".text.xl3.bold.make(),
+              "Login".text.xl3.bold.make(),
               20.heightBox,
 
               TextFormField(
@@ -81,7 +81,7 @@ class _Login_PageState extends State<Login_Page> {
                 onPressed:() {
                   checkValues();
                 },
-                child: "Register".text.xl.make(),
+                child: "Login".text.xl.make(),
               ),
               "Don't have an account?".text.make(),
               TextButton(onPressed: () {
