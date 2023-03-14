@@ -1,4 +1,5 @@
 import 'package:chat_app/models/UserModel.dart';
+import 'package:chat_app/screens/search.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -19,6 +20,15 @@ class _Home_PageState extends State<Home_Page> {
     return Scaffold(
       appBar: AppBar(
         title: "VartaApp".text.make(),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: (){
+          Navigator.push(context, 
+          MaterialPageRoute(builder: (context){
+            return Search_Page(userModel: widget.userModel, user: widget.firebaseUser);
+          }));
+        },
+        child: Icon(Icons.search),
       ),
     );
   }

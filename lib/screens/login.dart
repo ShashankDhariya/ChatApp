@@ -1,4 +1,6 @@
 // ignore: unused_import
+import 'package:chat_app/models/UserModel.dart';
+import 'package:chat_app/screens/home.dart';
 import 'package:chat_app/screens/signup.dart';
 import 'package:chat_app/utils/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,6 +19,9 @@ class _Login_PageState extends State<Login_Page> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController cpasswordController = TextEditingController();
+  
+  // final User firebaseUser;
+  // final UserModel userModel;
   @override
 
   void checkValues(){
@@ -37,7 +42,15 @@ class _Login_PageState extends State<Login_Page> {
     email: email,
     password: password
   );
-  Navigator.pushNamed(context, MyRoutes.homeRoute);
+  
+  // Navigator.push(
+  //   context,
+  //   MaterialPageRoute(
+  //     builder: (context){
+  //       return Home_Page(userModel: userModel, firebaseUser: firebaseUser);
+  //     }
+      // ),
+  // );
 } on FirebaseAuthException catch (e) {
   if (e.code == 'user-not-found') {
     print('No user found for that email.');
@@ -85,7 +98,12 @@ class _Login_PageState extends State<Login_Page> {
               ),
               "Don't have an account?".text.make(),
               TextButton(onPressed: () {
-                Navigator.pushNamed(context, MyRoutes.signupRoute);
+                Navigator.push(context,
+                MaterialPageRoute(
+                  builder: (context){
+                    return Signup_page();
+                  })
+                );
               },
               child: "Sign up".text.underline.make(),
               )
