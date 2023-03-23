@@ -25,11 +25,16 @@ class _Home_PageState extends State<Home_Page> {
         onPressed: (){
           Navigator.push(context, 
           MaterialPageRoute(builder: (context){
-            return Search_Page(userModel: widget.userModel, user: widget.firebaseUser);
+            return Search_Page(userModel: widget.userModel, firebaseuser: widget.firebaseUser,);
           }));
         },
         child: Icon(Icons.search),
       ),
+      body: Column(
+        children: [
+          Text(widget.userModel.email.toString()),
+        ],
+      )
     );
   }
 }

@@ -14,7 +14,7 @@ void main() async{
   if(currentUser != null){
     UserModel? fetchUserModel = await FirebaseHelper.getuserModelById(currentUser.uid);
     if(fetchUserModel != null){
-      runApp(MyAppLoggedIn(firebaseUser: currentUser, userModel: fetchUserModel));
+      runApp(MyAppLoggedIn(userModel: fetchUserModel, firebaseUser: currentUser));
     }
     else {
       runApp(MyApp());
@@ -28,7 +28,6 @@ void main() async{
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -47,7 +46,8 @@ class MyAppLoggedIn extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Home_Page(firebaseUser: firebaseUser, userModel: userModel),
+      debugShowCheckedModeBanner: false,
+      home: Home_Page(userModel: userModel, firebaseUser: firebaseUser), 
     );
   }
 }
