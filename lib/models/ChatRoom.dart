@@ -3,7 +3,7 @@ class ChatRoom{
   Map<String, dynamic>? participants;
   String? lastMessage;
 
-  ChatRoom({this.chatroomid, this.participants});
+  ChatRoom({this.chatroomid, this.participants, this.lastMessage});
 
   ChatRoom.fromMap(Map<String, dynamic> map){
     chatroomid = map["chatroomid"];
