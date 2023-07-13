@@ -10,22 +10,28 @@ class ChatMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.blueGrey
+        border: Border.all(color: Colors.black),
+        borderRadius: BorderRadius.circular(12),
+        color: Colors.green.shade100
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              const CircleAvatar(child: Icon(Icons.person)),
-              Text(
-                sender,
-                style: GoogleFonts.montserrat(
-                  fontWeight:FontWeight.bold,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                const CircleAvatar(child: Icon(Icons.person)),
+                const SizedBox(width: 10),
+                Text(
+                  sender,
+                  style: GoogleFonts.nunito(
+                    fontSize: 15,
+                    fontWeight:FontWeight.bold,
+                  )
                 )
-              )
-            ],
+              ],
+            ),
           ),
           Container(
             child: Padding(

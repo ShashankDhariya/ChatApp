@@ -29,7 +29,6 @@ class _ChatGPTState extends State<ChatGPT> {
 
     String response = await sendMessageToGPT(message.text);
     ChatMessage gpt = ChatMessage(text: response, sender: "Agent");
-    print(response);
     setState(() {
       msges.insert(0, gpt);
     });
@@ -50,7 +49,7 @@ class _ChatGPTState extends State<ChatGPT> {
       uri, 
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "Bearer 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",
+        "Authorization": "Bearer api-key-value",
       },
       body: json.encode(body)
     );
@@ -114,15 +113,15 @@ class _ChatGPTState extends State<ChatGPT> {
         child: Column(
           children: [
             Flexible(
-              child: Container(
+              child: SizedBox(
                 height: context.screenHeight,
                 child: ListView.builder(
                   reverse: true,
                   itemCount: msges.length,
                   itemBuilder:(context, index) {
                     return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: msges[index]
+                      padding: msges[index].sender == 'Agent'? const EdgeInsets.only(bottom: 8.0): const EdgeInsets.only(bottom: 0.0),
+                      child: msges[index],
                     );
                   },
                 ),
