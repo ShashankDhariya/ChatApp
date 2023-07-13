@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
-import 'package:chat_app/utils/routes.dart';
 import 'package:chat_app/models/UserModel.dart';
 
 class Signup_page extends StatefulWidget {
@@ -15,7 +14,6 @@ class Signup_page extends StatefulWidget {
 }
 
 class _Signup_pageState extends State<Signup_page> {
-
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController cpasswordController = TextEditingController();
@@ -26,10 +24,10 @@ class _Signup_pageState extends State<Signup_page> {
     String cpassword = cpasswordController.text.trim();
 
     if(email == "" || password == "" || cpassword == ""){
-      print("Enter your details");
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Enter your details")));
     }
     else if(password != cpassword){
-      print("Password don't match");
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Password don't match")));
     }
     else {
       signup(email, password);
@@ -45,12 +43,12 @@ class _Signup_pageState extends State<Signup_page> {
     );
     } on FirebaseAuthException catch (e) {
     if (e.code == 'weak-password') {
-      print('The password provided is too weak.');
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('The password provided is too weak.')));
     } else if (e.code == 'email-already-in-use') {
-      print('The account already exists for that email.');
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('The account already exists for that email.')));
     }
     } catch (e) {
-    print(e);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
 }
     if(credential != null){
       String uid = credential.user!.uid;
@@ -61,8 +59,8 @@ class _Signup_pageState extends State<Signup_page> {
         profilePic: "",
       );
       await FirebaseFirestore.instance.collection("users").doc(uid).set(newUser.toMap()).then((value) {
-        print("New User");
-        Navigator.push(
+        Navigator.popUntil(context, (route) => route.isFirst);
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context){
@@ -70,7 +68,8 @@ class _Signup_pageState extends State<Signup_page> {
             }
             )
           );
-      } );
+        } 
+      );
     }
   }
 
@@ -78,7 +77,7 @@ class _Signup_pageState extends State<Signup_page> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        margin: EdgeInsets.all(25),
+        margin: const EdgeInsets.all(25),
         alignment: Alignment.center,
         child: SingleChildScrollView(
           child: Column(

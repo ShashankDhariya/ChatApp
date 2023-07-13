@@ -35,7 +35,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
   void cropImg(XFile cropfile) async{
     CroppedFile? croppedImg = await ImageCropper().cropImage(
       sourcePath: cropfile.path,
-      aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+      aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
       compressQuality: 20
       );
 
@@ -49,7 +49,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
   void showInputImgOptions(){
     showDialog(context: context, builder: (BuildContext context) {
       return AlertDialog(
-        title: Text("Select Profile Picture"),
+        title: const Text("Select Profile Picture"),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -58,16 +58,16 @@ class _CompleteProfileState extends State<CompleteProfile> {
                 Navigator.pop(context);
                 selectImg(ImageSource.gallery);
               },
-              leading: Icon(Icons.photo_album),
-              title: Text("Select from Gallery"),
+              leading: const Icon(Icons.photo_album),
+              title: const Text("Select from Gallery"),
             ),
             ListTile(
               onTap: () {
                 Navigator.pop(context);
                 selectImg(ImageSource.camera);
               },
-              leading: Icon(Icons.camera),
-              title: Text("Take photo"),
+              leading: const Icon(Icons.camera),
+              title: const Text("Take photo"),
             ),
           ],
         ),
@@ -79,7 +79,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
     String name = nameController.text.trim();
 
     if(name == "" || img == null) {
-      print("Enter data");
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please Enter Details')));
     }
     else {
       uploadData();
@@ -118,7 +118,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
       body: SafeArea(
         child: Container(
           alignment: Alignment.center,
-          padding: EdgeInsets.all(30),
+          padding: const EdgeInsets.all(30),
           child: ListView(
             children: [
               CupertinoButton(
@@ -130,7 +130,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
                   foregroundColor: Colors.white,
                   backgroundImage: img != null? FileImage(img!): null,
                   radius: 50,
-                  child: img == null? Icon(Icons.person, size: 70,): null,
+                  child: img == null? const Icon(Icons.person, size: 70,): null,
                 ),
               ),
               20.heightBox,
@@ -141,7 +141,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
                 ),
                 child: TextFormField(
                   controller: nameController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: InputBorder.none,
                     hintText: "Name",
                   ),

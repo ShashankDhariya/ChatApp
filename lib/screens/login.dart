@@ -1,8 +1,7 @@
-// ignore: unused_import
 import 'package:chat_app/models/UserModel.dart';
 import 'package:chat_app/screens/home.dart';
 import 'package:chat_app/screens/signup.dart';
-import 'package:chat_app/utils/routes.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,56 +14,60 @@ class Login_Page extends StatefulWidget {
 }
 
 class _Login_PageState extends State<Login_Page> {
-
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController cpasswordController = TextEditingController();
-  
-  // final User firebaseUser;
-  // final UserModel userModel;
-  @override
 
   void checkValues(){
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
 
     if(email == "" || password == ""){
-      print("Enter your details");
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please Enter Details')));
     }
     else {
       login(email, password);
     }
   }
 
-  Future<void> login(String email, String password) async {
+  void login(String email, String password) async {
+    UserCredential? credential;
     try {
-  final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-    email: email,
-    password: password
-  );
+      credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: email,
+      password: password
+    );
   
-  // Navigator.push(
-  //   context,
-  //   MaterialPageRoute(
-  //     builder: (context){
-  //       return Home_Page(userModel: userModel, firebaseUser: firebaseUser);
-  //     }
-      // ),
-  // );
-} on FirebaseAuthException catch (e) {
-  if (e.code == 'user-not-found') {
-    print('No user found for that email.');
+  if(credential != null){
+    String uid = credential.user!.uid;
+
+    DocumentSnapshot userData = await FirebaseFirestore.instance.collection("users").doc(uid).get();
+    UserModel userModel = UserModel.fromMap(userData.data() as Map<String, dynamic>);
+
+    Navigator.popUntil(context, (route) => route.isFirst);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context){
+          return Home_Page(userModel: userModel, firebaseUser: credential!.user!);
+        }
+      ),
+    );
+  }
+  } on FirebaseAuthException catch (e) {
+    if (e.code == 'user-not-found') {
+      print('No user found for that email.');
   } else if (e.code == 'wrong-password') {
     print('Wrong password provided for that user.');
   }
 }
   }
 
-
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        margin: EdgeInsets.all(25),
+        margin: const EdgeInsets.all(25),
         alignment: Alignment.center,
         child: SingleChildScrollView(
           child: Column(
@@ -101,7 +104,7 @@ class _Login_PageState extends State<Login_Page> {
                 Navigator.push(context,
                 MaterialPageRoute(
                   builder: (context){
-                    return Signup_page();
+                    return const Signup_page();
                   })
                 );
               },

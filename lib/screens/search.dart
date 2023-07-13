@@ -67,7 +67,7 @@ class _Search_PageState extends State<Search_Page> {
               padding: const EdgeInsets.all(10.0),
               child: TextField(
                 controller: searchController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: "Enter Email",
                 ),
               ),
@@ -90,7 +90,7 @@ class _Search_PageState extends State<Search_Page> {
                     if(snapshot.hasData){
                       QuerySnapshot dataSnapshot = snapshot.data as QuerySnapshot;
 
-                      if(dataSnapshot.docs.length > 0){
+                      if(dataSnapshot.docs.isNotEmpty){
                         Map<String, dynamic> userMap = dataSnapshot.docs[0].data() as Map<String, dynamic>;
                         UserModel searchedUser = UserModel.fromMap(userMap);
                         return ListTile(
@@ -98,7 +98,6 @@ class _Search_PageState extends State<Search_Page> {
                             ChatRoom? chatRoomModel =  await getChatroomModel(searchedUser);
                             if(chatRoomModel != null){
                               Navigator.pop(context);
-                              // ignore: use_build_context_synchronously
                               Navigator.push(
                                 context, 
                                 MaterialPageRoute(
@@ -123,18 +122,18 @@ class _Search_PageState extends State<Search_Page> {
                       }
 
                       else {
-                        return Text("No result found");
+                        return const Text("No result found");
                       }
                     }
                     else if(snapshot.hasError){
-                      return Text("An error occured");
+                      return const Text("An error occured");
                     }
                     else {
-                      return Text("No result found");
+                      return const Text("No result found");
                     }
                 }
                 else {
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 }
               }
             )
